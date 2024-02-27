@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale = 1.0">
+    <title>Page title</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        
+        .container {
+            background: green;
+            padding: 20px;
+            height: 100vh;
+            box-shadow: 0 0 10px black;
+        }
+        
+        header {
+            border-bottom: 2px solid black;
+            overflow: hidden;
+        }
+        
+        header h2 {
+            color: white;
+            float: left;
+        }
+        
+        header p {
+            float: left;
+            background: red;
+            padding: 10px;
+            color: white;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        
+        header p::before {
+            content: '$';
+        }
+        
+        header h3 {
+            float: right;
+            background: black;
+            padding: 15px;
+            border-radius: 7px;
+            color: white;
+        }
+        
+        header h3::before {
+            content: '$';
+        }
+        
+        .comment {
+            color: white;
+            text-align: center;
+        }
+        
+        main {
+            background: darkgreen;
+            width: 70%;
+            margin: auto;
+            border-radius: 15px;
+            height: 25rem;
+            position: relative;
+            
+            <!-- display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; -->          
+        }
+        
+        main .comment2 {
+            color: white;
+            text-align: center;
+            position: absolute;
+            width: 70%;
+            left: 15%;
+            top: 10px;
+            font-size: 1.7em;
+        }
+        
+        main .card span {
+            padding: 15px;
+            color: white;
+            text-align: center;
+            width: 20%;
+            height: 200px;
+            font-size: 2rem;
+            border-radius: 15px;   
+            position: absolute;    
+            top: 20%;
+            left: 40%;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            animation-name: cardanim;
+            animation-duration: 1.3s;
+        }
+        
+        .redcard {
+            background: red;
+        }
+        
+        .blackcard {
+            background: black;
+        }
+        
+        main .money {
+           /* background: white;*/
+            width: 100%;
+            height: 13%;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            border-radius: 0 0 15px 15px;
+            
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        
+        
+        @keyframes cardanim {
+            from {
+                opacity: 0;
+                left: 0;
+            }
+            
+            to {
+                opacity: 1;
+                left: 40;
+            }
+        }
+        
+        footer {
+            width: 80%;
+            margin: auto;
+            margin-top: 25px;
+        }
+        
+        footer button {
+            font-size: 1.2rem;
+        }
+        
+        footer #red {
+            background: red;
+            color: white;
+            padding: 10px 20px;
+            float: left;
+            border: none;
+        }
+        
+        footer #black {
+            background: black;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            margin-left: 10px;
+        }
+        
+        @media(max-width: 600px) {
+            main {
+                width: 90%;
+                height: 26rem;
+            }
+            
+            main .card span {
+                width: 50%;
+                left: 25%;
+                height: 250px;
+                top: 15%;
+            }
+            
+            main .money {
+                height: 15%;
+                
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+            }
+            
+            main .money button {
+                background: white;
+                color: black;
+                padding: 10px 30px;
+                font-size: 1.2rem;
+                border: none;
+                box-shadow: 0 0 20px rgb(0,0,0,0.5);
+                border-radius: 5px;
+                border: none;
+               
+            }
+            
+            .money button::before {
+                content: "$";
+            }
+            
+            @keyframes cardanim {
+              from {
+                opacity: 0;
+                left: 0;
+            }
+            
+              to {
+                opacity: 1;
+                left: 25%;
+            }
+          }
+          
+          footer #black {
+              float: right;
+          }
+          
+          footer {
+              overflow: hidden;
+          }
+        
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h2>GAMEBET</h2>
+            <p id="bettedamount"></p>
+            <h3 id="wallet">120</h3>
+        </header>
+        <div>
+            <p class="comment">Place a bet and select a card</p>
+        </div>
+        <main>
+            <div class="comment2"></div>
+            <div class="card"></div>
+            <div class="money">
+               <button id="bet">Bet</button>
+            </div>
+        </main>
+        <footer>
+            <div class="buttons">
+                <button id="red">Red</button>
+                <button id="black">Black</button>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        //var for commentator
+
+        const comment = document.querySelector('.comment');
+        const comment2 = document.querySelector('.comment2');
+        const comment2Span = document.createElement('span');
+        let wallet = document.getElementById('wallet');
+        let betWallet = document.getElementById('bettedamount');
+        
+        //vars for red and black card
+        
+        const redBtn = document.querySelector('#red');
+        const blackBtn = document.querySelector('#black');
+        const card = document.querySelector('.card');
+        const span = document.createElement('span');
+
+        card.appendChild(span);
+        
+        const bet = document.getElementById('bet');
+        
+        bet.addEventListener('click', function() {
+        
+        var alertBet = prompt("Place your amount", "10");
+        if (alertBet== null || alertBet == "") {
+            betWallet.textContent = alertBet;
+        } else {
+            betWallet.textContent = alertBet;
+        }
+        
+        if(parseInt(betWallet.textContent) > parseInt(wallet.textContent)) {
+            betWallet.textContent = 0;
+            alert('Insuficient balance');
+        } else {
+            bet.textContent = alertBet;
+            comment2.textContent = "Red or black"
+        }
+        
+        comment.innerText="Select a card";
+        
+     })
+     
+
+
+        
+
+        
+        let redPicked = `<span class="redcard">Red</span>`;
+        let blackPicked = `<span class="blackcard">Black</span>`;
+       
+
+
+        let spans = [
+            {
+                span : `<span class="redcard">Red</span>`
+            }, 
+            {
+                span: `<span class="blackcard">Black</span>`
+            }
+        ];
+                   
+            let random = Math.floor(Math.random() * spans.length);
+
+
+
+       alert("Please report any issuse............by Habeeb version 1.3");
+
+        
+       
+       
+    
+        redBtn.addEventListener('click', function () {
+
+            let spans = [
+            {
+                span : `<span class="redcard">Red</span>`
+            }, 
+            {
+                span: `<span class="blackcard">Black</span>`
+            }
+        ];
+                   
+            let random = Math.floor(Math.random() * spans.length);
+        
+            card.style.display="block";
+        
+            card.innerHTML = spans[random].span;
+            
+           
+            if (card.innerHTML == redPicked) {
+                wallet.textContent = parseInt(wallet.textContent) + parseInt(betWallet.textContent);
+                comment.textContent = "Great, next round";
+            } else {
+                wallet.textContent -= betWallet.textContent;
+                comment.textContent = "oops, try again";
+            }
+                
+   
+                
+                if(wallet.textContent <= 0) {
+              alert("Game Over 😂😂😂");
+              comment2.textContent ="Game over";
+              wallet.textContent = 0;
+                }
+       
+        });
+        
+        
+
+        blackBtn.addEventListener('click', function() {
+
+            let spans = [
+            {
+                span : `<span class="redcard">Red</span>`
+            }, 
+            {
+                span: `<span class="blackcard">Black</span>`
+            }
+        ];
+                   
+        let random = Math.floor(Math.random() * spans.length);
+        card.style.display ="block";
+            
+            card.innerHTML = spans[random].span;
+         
+            if (card.innerHTML == blackPicked) {
+                wallet.textContent = parseInt(wallet.textContent) + parseInt(betWallet.textContent);
+                comment.textContent = "Great, next round";
+            } else {
+                wallet.textContent -= betWallet.textContent;
+                comment.textContent = "oops, try again";
+            }
+
+            
+         if(wallet.textContent <= 0) {
+              alert("Game Over 😂😂😂");
+              comment2.textContent="Game over";
+              wallet.innerText = 0;
+                }
+       
+        }); 
+        
+        
+        wallet.addEventListener('click', function() {
+            var amount = prompt("Type amount of money you want to send");
+            if(confirm(amount)) {
+                prompt("Send " + amount + " naira to 8188876519 Opay Musbau amoo MFY-gamebet, Note it will be converted to dollars")
+            }
+        });
+        
+    console.log("Thanks for playing Gmail hacked 😂😂😂😂😂");
+        
+    </script>
+</body>
+</html>
